@@ -12,7 +12,7 @@ GameWorld* createStudentWorld(std::string assetDir)
 void StudentWorld::init_Protesters()
 {
 	int probabilityOfHardcore = std::min(90, static_cast<int>(getLevel() * 10 + 30));
-	
+
 	if (rand() % 101 <= probabilityOfHardcore)
 		m_protesters.push_back(new Hardcore_Protester(m_player));
 	else
@@ -100,7 +100,7 @@ void StudentWorld::init_Golds()
 			row = rand() % 37 + 20;
 		}
 
-		m_player->addGolds(col, row, false, GameObject::Ice);
+		m_player->addGolds(col, row, false, Actor::Ice);
 	}
 }
 
@@ -440,7 +440,7 @@ bool StudentWorld::isWithinRange_Boulder(int col, int row) const
 	return false;
 }
 
-bool StudentWorld::isValidSpotToMove(int col, int row) const
+bool StudentWorld::isOpenSpot(int col, int row) const
 {
 
 	if (col >= 0 && col <= VIEW_WIDTH - 4 && row >= 0 && row <= VIEW_HEIGHT - 4 &&
@@ -547,7 +547,7 @@ double StudentWorld::calculateRadius(int x_1, int y_1, int x_2, int y_2) const
 	return sqrt(pow(y_dis, 2) + pow(x_dis, 2));
 }
 
-bool StudentWorld::isWithinRange(int x_cord, int y_cord, GameObject* actor) const
+bool StudentWorld::isWithinRange(int x_cord, int y_cord, Actor* actor) const
 {
 	if (calculateRadius(x_cord, y_cord, actor->getX(), actor->getY()) <= 3)
 		return true;

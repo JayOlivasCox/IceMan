@@ -19,7 +19,7 @@ typedef std::vector<Golds*> GoldContainer;
 typedef std::vector<BarrelOil*> OilContainer;
 typedef std::vector<Sonar*> SonarContainer;
 typedef std::vector<Protester*> ProtesterContainer;
-typedef GameObject::Direction Direction;
+typedef Actor::Direction Direction;
 
 const static int PLAYER_SIZE = 4;
 const static int Ice_START_X = 30;
@@ -59,12 +59,12 @@ public:
 
 	template <class iterator_type>
 	bool	isWithinRange_sameObjs(int col, int row, iterator_type it, iterator_type end) const;
-	bool	isWithinRange(int x_cord, int y_cord, GameObject* actor) const;
+	bool	isWithinRange(int x_cord, int y_cord, Actor* actor) const;
 	bool	isWithinRange(int col, int row) const;		//	CHECK IF Ice IS WITHIN RANGE
 	bool	isWithinRange_Boulder(int col, int row) const;
 
 	bool	isPlayerCloseBy(int col, int row) const;
-	bool	isValidSpotToMove(int col, int row) const;
+	bool	isOpenSpot(int col, int row) const;
 	bool	isIceIndex(int col, int row) const;
 	bool	isIceBelow(int col, int row) const;
 
@@ -139,4 +139,3 @@ bool StudentWorld::isWithinRange_sameObjs(int col, int row, iterator_type it, it
 }
 
 #endif // STUDENTWORLD_H_
-

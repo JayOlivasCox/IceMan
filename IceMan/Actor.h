@@ -1,5 +1,5 @@
-#ifndef ACTOR_H_
-#define ACTOR_H_
+#ifndef isOpenSpot_H_
+#define isOpenSpot_H_
 
 #include "GraphObject.h"
 #include "GameConstants.h"
@@ -14,15 +14,15 @@ class Protester;
 // base class for gold nuggets, sonar, etc
 // abstract class 
 
-class GameObject : public GraphObject
+class isOpenSpot : public GraphObject
 {
 public:
-	GameObject(int imageID, int startX, int startY, Direction dir, double size, unsigned int depth);
-	virtual ~GameObject() {};
+	isOpenSpot(int imageID, int startX, int startY, Direction dir, double size, unsigned int depth);
+	virtual ~isOpenSpot() {};
 
 	enum Current_State { TIME_UP, REST_STATE };
 	enum Sound { SOUND_OFF, SOUND_ON };
-	enum Actors { R_PROTESTER, H_PROTESTER, PLAYER, Ice };
+	enum isOpenSpots { R_PROTESTER, H_PROTESTER, PLAYER, Ice };
 
 	// SETTER FUNCTIONS //
 
@@ -56,7 +56,7 @@ private:
 };
 
 
-class Goodies : public GameObject
+class Goodies : public isOpenSpot
 {
 public:
 
@@ -66,23 +66,23 @@ public:
 
 	// GETTER FUNCTIONS //
 
-	Actors getOwnership() const { return whoPickedUp; };
+	isOpenSpots getOwnership() const { return whoPickedUp; };
 
 	// SETTER FUNCTIONS //
 
-	void setOwnership(Actors actor);
+	void setOwnership(isOpenSpots isOpenSpot);
 	virtual void doSomething(IceMan* player) = 0;
 
 
 private:
-	Actors whoPickedUp = Ice;
+	isOpenSpots whoPickedUp = Ice;
 };
 
 class Golds : public Goodies
 {
 
 public:
-	Golds(int startX, int startY, bool setting, Actors owner);
+	Golds(int startX, int startY, bool setting, isOpenSpots owner);
 	virtual ~Golds() {};
 
 	void doSomething(IceMan* player);
@@ -99,7 +99,7 @@ public:
 
 };
 
-class Squirt : public GameObject
+class Squirt : public isOpenSpot
 {
 public:
 	Squirt(int col, int row, Direction dir);
@@ -146,7 +146,7 @@ public:
 };
 
 
-class Boulder : public GameObject
+class Boulder : public isOpenSpot
 {
 public:
 	Boulder(int startX, int startY);
@@ -162,7 +162,7 @@ private:
 };
 
 
-class Protester : public GameObject
+class Protester : public isOpenSpot
 {
 public:
 	Protester(int imageID, int startX, int startY, Direction dir, double size, unsigned int depth);
@@ -211,7 +211,7 @@ private:
 	int direction[4][2] = { {1,0},{ -1,0 }, {0,1}, {0,-1} };
 	std::string dir_path[4] = { "E", "W", "N", "S" };
 	std::string pathToExit;
-	char maze[64][64];
+	char board[64][64];
 
 	// HELPER FUNCTIONS //
 
@@ -221,7 +221,7 @@ private:
 	void	checkPerpenPath(int m_col, int m_row, Direction currDir,
 		IceMan* player, std::vector<Direction>& dir) const;
 
-	void	FindExitPath(char maze[64][64], int width, int height, int startX, int startY,
+	void	FindExitPath(char board[64][64], int width, int height, int startX, int startY,
 		std::string path, std::string& pathToExit, bool& found, IceMan*& player);
 
 	int		shouting_interval = 0;
@@ -249,7 +249,7 @@ private:
 	int totalDistanceFromPlayer;
 };
 
-class IceMan : public GameObject
+class IceMan : public isOpenSpot
 {
 public:
 	IceMan(StudentWorld* game_adr);
@@ -288,7 +288,7 @@ public:
 	void	addScore(int score) { currScore += score; };
 	void	addGold() { numOfGolds++; };
 
-	void	addGolds(int col, int row, bool setting, Actors owner);
+	void	addGolds(int col, int row, bool setting, isOpenSpots owner);
 
 	// DECREASE INVENTORIES //
 
@@ -311,4 +311,4 @@ private:
 	int		healthpts = 100;
 };
 
-#endif // ACTOR_H_
+#endif // isOpenSpot_H_
