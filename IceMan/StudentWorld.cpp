@@ -7,20 +7,16 @@ GameWorld* createStudentWorld(std::string assetDir)
 	return new StudentWorld(assetDir);
 }
 
-// PROTESTER IMPLEMENTATIONS ----------------------------------------------------------------------------------
+// --------------------------------------------------------- PROTESTER IMPLEMENTATIONS --------------------------------------------------------- // 
 
 void StudentWorld::init_Protesters()
 {
-	//chance of the protestor that spawns is a hard one
 	int probabilityOfHardcore = std::min(90, static_cast<int>(getLevel() * 10 + 30));
 
-	//if the spawned protester turns out to be hard, push the new hard protester object into the vector of protesters
-	//otherwise, push the normal protester into the same vector
 	if (rand() % 101 <= probabilityOfHardcore)
 		m_protesters.push_back(new Hardcore_Protester(m_player));
 	else
 		m_protesters.push_back(new Regular_Protester(m_player));
-
 
 	timeSinceProtesterAdded = std::max(25, static_cast<int>(200 - getLevel()));
 	maxNumOfProtesters = std::min(15, static_cast<int>(2 + getLevel() * 1.5));
@@ -28,13 +24,11 @@ void StudentWorld::init_Protesters()
 }
 
 
-
 void StudentWorld::move_Protesters()
 {
 
 	int probabilityOfHardcore = std::min(90, static_cast<int>(getLevel() * 10 + 30));
 
-	//as long as current number of protesters doesn't exceed the threshold set
 	if (timeSinceProtesterAdded <= 0 && numOfProtesters < maxNumOfProtesters) {
 
 		if (rand() % 101 <= probabilityOfHardcore)
@@ -42,20 +36,14 @@ void StudentWorld::move_Protesters()
 		else
 			m_protesters.push_back(new Regular_Protester(m_player));
 
-		numOfProtesters++; //increment the protesters
+		numOfProtesters++;
 		timeSinceProtesterAdded = std::max(25, static_cast<int>(200 - getLevel()));
 	}
 
-	//decrement the time span since last protester spawned
 	timeSinceProtesterAdded--;
 
-
-	//iterator through the protesters vector
 	ProtesterContainer::iterator it = m_protesters.begin();
 
-	//if the pointer to the protester object is alive
-	//kill him
-	//then number of protesters decrements
 	while (it != m_protesters.end()) {
 
 		if (!(*it)->isAlive()) {
@@ -63,7 +51,7 @@ void StudentWorld::move_Protesters()
 			it = m_protesters.erase(it);
 			numOfProtesters--;
 		}
-		//otherwise, call the player object's doSomething
+
 		else {
 			(*it)->doSomething(m_player);
 			it++;
@@ -74,7 +62,7 @@ void StudentWorld::move_Protesters()
 }
 
 
-// INITIALIZATION FUNCTIONS -------------------------------------------------------------------
+// --------------------------------------------------------- INITIALIZATION IMPLEMENTATIONS --------------------------------------------------------- // 
 
 void StudentWorld::init_Oils()
 {
@@ -85,21 +73,18 @@ void StudentWorld::init_Oils()
 		int col = rand() % (VIEW_HEIGHT - 3);
 		int row = rand() % 37 + 20;
 
-		//as long as the space is not taken up by ice, or validSpot is true
 		while (!isWithinIce(col, row) || !isValidSpotForGoodies(col, row))
 		{
-			//spawn
 			col = rand() % (VIEW_HEIGHT - 3);
 			row = rand() % 37 + 20;
 		}
-		//insert the barrel oil object into our designated vector
+
 		m_oils.push_back(new BarrelOil(col, row));
 	}
 
 
 }
 
-//same logic as the oils ones
 void StudentWorld::init_Golds()
 {
 	int G = std::max(5 - static_cast<int>(getLevel() / 2), 2);
@@ -115,10 +100,10 @@ void StudentWorld::init_Golds()
 			row = rand() % 37 + 20;
 		}
 
-		m_player->addGolds(col, row, false, GameObject::Ice);
+		m_player->addGolds(col, row, false, Actor::Ice);
 	}
 }
-//andddddd same as gold
+
 void StudentWorld::init_Boulders()
 {
 
@@ -172,24 +157,22 @@ void StudentWorld::init_Ices()
 }
 
 
-// EVENT FUNCTIONS  ---------------------------------- // 
+// --------------------------------------------------------- ACTION IMPLEMENTATIONS --------------------------------------------------------- // 
 
 
 
 void StudentWorld::move_Oils()
 {
-	//iterate through the oils vector with iterator it
 	OilContainer::iterator it = m_oils.begin();
 
 	while (it != m_oils.end()) {
 
 		if (!((*it)->isAlive())) {
-			//delete object and set its pointer to nullptr
 			delete* it;
 			*it = nullptr;
 			it = m_oils.erase(it);
 		}
-		//otherwise, call its doSomething
+
 		else {
 			(*it)->doSomething(m_player);
 			it++;
@@ -294,7 +277,7 @@ void StudentWorld::move_Water()
 	}
 }
 
-// MAIN FUNCS ---------------------------------------------------------
+// --------------------------------------------------------- MAIN FUNCTIONS --------------------------------------------------------- // 
 
 int StudentWorld::init()
 {
@@ -419,7 +402,7 @@ void StudentWorld::cleanUp()
 }
 
 
-// NAV BAR ---------------------------------------------------------
+// --------------------------------------------------------- GAME DISPLAY IMPLEMENTATIONS --------------------------------------------------------- // 
 
 void StudentWorld::setGameText()
 {
@@ -439,7 +422,7 @@ void StudentWorld::setGameText()
 	setGameStatText(text);
 }
 
-// GAME LOGIC  -----------------------------------------------------
+// --------------------------------------------------------- GAME LOGIC IMPLEMENTATIONS --------------------------------------------------------- // 
 
 
 bool StudentWorld::isWithinRange_Boulder(int col, int row) const
@@ -457,7 +440,7 @@ bool StudentWorld::isWithinRange_Boulder(int col, int row) const
 	return false;
 }
 
-bool StudentWorld::isValidSpotToMove(int col, int row) const
+bool StudentWorld::isOpenSpot(int col, int row) const
 {
 
 	if (col >= 0 && col <= VIEW_WIDTH - 4 && row >= 0 && row <= VIEW_HEIGHT - 4 &&
@@ -564,7 +547,7 @@ double StudentWorld::calculateRadius(int x_1, int y_1, int x_2, int y_2) const
 	return sqrt(pow(y_dis, 2) + pow(x_dis, 2));
 }
 
-bool StudentWorld::isWithinRange(int x_cord, int y_cord, GameObject* actor) const
+bool StudentWorld::isWithinRange(int x_cord, int y_cord, Actor* actor) const
 {
 	if (calculateRadius(x_cord, y_cord, actor->getX(), actor->getY()) <= 3)
 		return true;
@@ -645,7 +628,7 @@ void StudentWorld::dig_Ice()
 	{
 	case Direction::right:
 		for (int i = 0; i < PLAYER_SIZE; i++)								//	PLAYER_SIZE = 4 (occupies 2x2 squares)
-			if (isIceIndex(col + 3, row + i)) {							    //	Need to check if we can access given subscript
+			if (isIceIndex(col + 3, row + i)) {									//	Need to check if we can access given subscript
 				if (m_IceList[col + 3][row + i]) {
 					delete m_IceList[col + 3][row + i];						//	Delete 2x2 Ice objects
 					m_IceList[col + 3][row + i] = nullptr;
