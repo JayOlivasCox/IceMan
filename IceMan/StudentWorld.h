@@ -10,8 +10,6 @@
 #include <vector>
 #include <algorithm>
 
-
-//Vector of unique objects RATHER than a vector of just all objects in general
 typedef std::vector<std::vector<Ice*>> IceContainer;
 typedef std::vector<Squirt*> SquirtContainer;
 typedef std::vector<Water*> WaterContainer;
@@ -21,10 +19,8 @@ typedef std::vector<Golds*> GoldContainer;
 typedef std::vector<BarrelOil*> OilContainer;
 typedef std::vector<Sonar*> SonarContainer;
 typedef std::vector<Protester*> ProtesterContainer;
-typedef GameObject::Direction Direction;
+typedef Actor::Direction Direction;
 
-
-//GAME CONSTS
 const static int PLAYER_SIZE = 4;
 const static int Ice_START_X = 30;
 const static int Ice_END_X = 33;
@@ -47,7 +43,7 @@ public:
 	virtual void cleanUp();
 
 
-	//MOVE FUNCTIONS
+	//	ACTION FUNCTIONS //
 
 	void	move_Water();
 	void	move_Boulders();
@@ -58,17 +54,17 @@ public:
 	void	dig_Ice();
 
 
-	// GAME FUNCS DECLARATIONS //
+	// GAME LOGIC FUNCTIONS //
 
 
 	template <class iterator_type>
 	bool	isWithinRange_sameObjs(int col, int row, iterator_type it, iterator_type end) const;
-	bool	isWithinRange(int x_cord, int y_cord, GameObject* actor) const;
+	bool	isWithinRange(int x_cord, int y_cord, Actor* actor) const;
 	bool	isWithinRange(int col, int row) const;		//	CHECK IF Ice IS WITHIN RANGE
 	bool	isWithinRange_Boulder(int col, int row) const;
 
 	bool	isPlayerCloseBy(int col, int row) const;
-	bool	isValidSpotToMove(int col, int row) const;
+	bool	isOpenSpot(int col, int row) const;
 	bool	isIceIndex(int col, int row) const;
 	bool	isIceBelow(int col, int row) const;
 
@@ -78,11 +74,11 @@ public:
 
 	Protester* hitProtester(int x_cord, int y_cord) const;
 
-	//	NAV BAR
+	//	GAME SCREEN	//
 
 	void setGameText();
 
-	// GETTERS
+	// GETTER FUNCTIONS //
 
 	IceContainer& getIce() { return m_IceList; };
 	ProtesterContainer& getProtesters() { return m_protesters; };
@@ -143,4 +139,3 @@ bool StudentWorld::isWithinRange_sameObjs(int col, int row, iterator_type it, it
 }
 
 #endif // STUDENTWORLD_H_
-
