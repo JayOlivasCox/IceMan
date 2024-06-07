@@ -643,7 +643,7 @@ void Boulder::doSomething(IceMan* player)
 {
 	StudentWorld* Game = player->getWorld();
 
-	if (!Game->isIceBelow(getX(), getY())) 						//	if there is no Ice below, fall
+	if (!Game->isIceBelow(getX(), getY())) 	//	if there is no Ice below, set its state of falling to true
 		fallingState = true;
 
 
@@ -665,23 +665,23 @@ void Boulder::doSomething(IceMan* player)
 			damagedProtester->setToLeaveOilFieldState();
 		}
 
-		if (Game->isWithinRange(getX(), getY(), player))				// Collision with a player
+		if (Game->isWithinRange(getX(), getY(), player))// If it comes in contact with a player (protester or iceman himself
 		{
-			player->setDead();
+			player->setDead(); //kill the mandem
 			setDead();
 		}
-		else if (Game->isWithinRange_sameObjs(getX(), getY(), Game->getBoulders().begin(), Game->getBoulders().end()))		// Collision with another boulder	
+		else if (Game->isWithinRange_sameObjs(getX(), getY(), Game->getBoulders().begin(), Game->getBoulders().end()))	// If it somehow collides with another boulder
 		{
 			setDead();
 		}
-		else if (Game->isWithinRange(getX(), getY()))			//	Collision with Ice
+		else if (Game->isWithinRange(getX(), getY()))	//If it hits Ice
 		{
 			setDead();
 		}
 
 		else
 		{
-			moveTo(getX(), getY() - 1);
+			moveTo(getX(), getY() - 1); //Otherwise, move accordingly. 
 		}
 
 	}
