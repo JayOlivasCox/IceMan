@@ -10,6 +10,8 @@
 #include <vector>
 #include <algorithm>
 
+
+//Vector of unique objects RATHER than a vector of just all objects in general
 typedef std::vector<std::vector<Ice*>> IceContainer;
 typedef std::vector<Squirt*> SquirtContainer;
 typedef std::vector<Water*> WaterContainer;
@@ -21,6 +23,8 @@ typedef std::vector<Sonar*> SonarContainer;
 typedef std::vector<Protester*> ProtesterContainer;
 typedef GameObject::Direction Direction;
 
+
+//GAME CONSTS
 const static int PLAYER_SIZE = 4;
 const static int Ice_START_X = 30;
 const static int Ice_END_X = 33;
@@ -43,7 +47,7 @@ public:
 	virtual void cleanUp();
 
 
-	//	ACTION FUNCTIONS //
+	//MOVE FUNCTIONS
 
 	void	move_Water();
 	void	move_Boulders();
@@ -54,7 +58,7 @@ public:
 	void	dig_Ice();
 
 
-	// GAME LOGIC FUNCTIONS //
+	// GAME FUNCS DECLARATIONS //
 
 
 	template <class iterator_type>
@@ -74,11 +78,11 @@ public:
 
 	Protester* hitProtester(int x_cord, int y_cord) const;
 
-	//	GAME SCREEN	//
+	//	NAV BAR
 
 	void setGameText();
 
-	// GETTER FUNCTIONS //
+	// GETTERS
 
 	IceContainer& getIce() { return m_IceList; };
 	ProtesterContainer& getProtesters() { return m_protesters; };
