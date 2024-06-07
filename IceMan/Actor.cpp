@@ -4,12 +4,12 @@
 // --------------------------------------------------------- PROTESTER --------------------------------------------------------- // 
 
 Protester::Protester(int imageID, int startX, int startY, Direction dir, double size, unsigned int depth) :
-	GameObject(imageID, startX, startY, dir, size, depth)
+	Actor(imageID, startX, startY, dir, size, depth)
 {
-	memset(maze, '.', sizeof(maze));
+	memset(board, '.', sizeof(board));
 }
 
-void Protester::FindExitPath(char maze[64][64], int width, int height, int startX, int startY,
+void Protester::FindExitPath(char board[64][64], int width, int height, int startX, int startY,
 	std::string path, std::string& pathToExit, bool& found, IceMan*& player)
 {
 	if (found) return;
@@ -20,13 +20,13 @@ void Protester::FindExitPath(char maze[64][64], int width, int height, int start
 
 		if (i == 0) {
 			if (next_x >= 0 && next_x <= width && next_y >= 0 && next_y <= height && !checkForObstacles(next_x + 3, next_y, right, player)) {
-				if (maze[next_x][next_y] == '.')
+				if (board[next_x][next_y] == '.')
 				{
-					maze[next_x][next_y] = 'X';
-					FindExitPath(maze, width, height, next_x, next_y, path + dir_path[i], pathToExit, found, player);
+					board[next_x][next_y] = 'X';
+					FindExitPath(board, width, height, next_x, next_y, path + dir_path[i], pathToExit, found, player);
 
 					if (!found)
-						maze[next_x][next_y] = '.';
+						board[next_x][next_y] = '.';
 				}
 				if (next_x == 60 && next_y == 60)
 				{
@@ -39,13 +39,13 @@ void Protester::FindExitPath(char maze[64][64], int width, int height, int start
 
 		else if (i == 1) {
 			if (next_x >= 0 && next_x <= width && next_y >= 0 && next_y <= height && !checkForObstacles(next_x, next_y, left, player)) {
-				if (maze[next_x][next_y] == '.')
+				if (board[next_x][next_y] == '.')
 				{
-					maze[next_x][next_y] = 'X';
-					FindExitPath(maze, width, height, next_x, next_y, path + dir_path[i], pathToExit, found, player);
+					board[next_x][next_y] = 'X';
+					FindExitPath(board, width, height, next_x, next_y, path + dir_path[i], pathToExit, found, player);
 
 					if (!found)
-						maze[next_x][next_y] = '.';
+						board[next_x][next_y] = '.';
 				}
 
 				else if (next_x == 60 && next_y == 60)
@@ -60,13 +60,13 @@ void Protester::FindExitPath(char maze[64][64], int width, int height, int start
 
 		if (i == 2) {
 			if (next_x >= 0 && next_x <= width && next_y >= 0 && next_y <= height && !checkForObstacles(next_x, next_y, up, player)) {
-				if (maze[next_x][next_y] == '.')
+				if (board[next_x][next_y] == '.')
 				{
-					maze[next_x][next_y] = 'X';
-					FindExitPath(maze, width, height, next_x, next_y, path + dir_path[i], pathToExit, found, player);
+					board[next_x][next_y] = 'X';
+					FindExitPath(board, width, height, next_x, next_y, path + dir_path[i], pathToExit, found, player);
 
 					if (!found)
-						maze[next_x][next_y] = '.';
+						board[next_x][next_y] = '.';
 				}
 
 				else if (next_x == 60 && next_y == 60)
@@ -81,13 +81,13 @@ void Protester::FindExitPath(char maze[64][64], int width, int height, int start
 
 		if (i == 3) {
 			if (next_x >= 0 && next_x <= width && next_y >= 0 && next_y <= height && !checkForObstacles(next_x, next_y - 3, down, player)) {
-				if (maze[next_x][next_y] == '.')
+				if (board[next_x][next_y] == '.')
 				{
-					maze[next_x][next_y] = 'X';
-					FindExitPath(maze, width, height, next_x, next_y, path + dir_path[i], pathToExit, found, player);
+					board[next_x][next_y] = 'X';
+					FindExitPath(board, width, height, next_x, next_y, path + dir_path[i], pathToExit, found, player);
 
 					if (!found)
-						maze[next_x][next_y] = '.';
+						board[next_x][next_y] = '.';
 				}
 
 				else if (next_x == 60 && next_y == 60)
@@ -116,7 +116,7 @@ void Protester::checkPerpenPath(int col, int row, Direction currDir, IceMan* pla
 		flag = true;
 
 		for (int i = 0; i < 4; i++)
-			if (!Game->isValidSpotToMove(col + i, row - 1))
+			if (!Game->isOpenSpot(col + i, row - 1))
 				flag = false;
 
 		if (flag) dir.push_back(down);
@@ -124,7 +124,7 @@ void Protester::checkPerpenPath(int col, int row, Direction currDir, IceMan* pla
 		flag = true;
 
 		for (int i = 0; i < 4; i++)
-			if (!Game->isValidSpotToMove(col + i, row + 4))
+			if (!Game->isOpenSpot(col + i, row + 4))
 				flag = false;
 
 		if (flag) dir.push_back(up);
@@ -134,7 +134,7 @@ void Protester::checkPerpenPath(int col, int row, Direction currDir, IceMan* pla
 		flag = true;
 
 		for (int i = 0; i < 4; i++)
-			if (!Game->isValidSpotToMove(col - 1, row + i))
+			if (!Game->isOpenSpot(col - 1, row + i))
 				flag = false;
 
 		if (flag) dir.push_back(left);
@@ -142,7 +142,7 @@ void Protester::checkPerpenPath(int col, int row, Direction currDir, IceMan* pla
 		flag = true;
 
 		for (int i = 0; i < 4; i++)
-			if (!Game->isValidSpotToMove(col + 4, row + i))
+			if (!Game->isOpenSpot(col + 4, row + i))
 				flag = false;
 
 		if (flag) dir.push_back(right);
@@ -253,22 +253,22 @@ void Protester::GoToCurrDirection(IceMan* player)
 	switch (currDir)
 	{
 	case up:
-		if (Game->isValidSpotToMove(getX(), getY() + 4))
+		if (Game->isOpenSpot(getX(), getY() + 4))
 			moveTo(getX(), getY() + 1);
 		else setNumSquaresToMoveInCurrentDirection(0);
 		break;
 	case down:
-		if (Game->isValidSpotToMove(getX(), getY() - 1))
+		if (Game->isOpenSpot(getX(), getY() - 1))
 			moveTo(getX(), getY() - 1);
 		else setNumSquaresToMoveInCurrentDirection(0);
 		break;
 	case right:
-		if (Game->isValidSpotToMove(getX() + 4, getY()))
+		if (Game->isOpenSpot(getX() + 4, getY()))
 			moveTo(getX() + 1, getY());
 		else setNumSquaresToMoveInCurrentDirection(0);
 		break;
 	case left:
-		if (Game->isValidSpotToMove(getX() - 1, getY()))
+		if (Game->isOpenSpot(getX() - 1, getY()))
 			moveTo(getX() - 1, getY());
 		else setNumSquaresToMoveInCurrentDirection(0);
 		break;
@@ -297,25 +297,25 @@ void Protester::pickNewDirection(IceMan* player)
 		{
 
 		case right:
-			if (Game->isValidSpotToMove(getX() + 1, getY()))
+			if (Game->isOpenSpot(getX() + 1, getY()))
 				setDirection(right);
 			else rightDir = false;
 			break;
 
 		case left:
-			if (Game->isValidSpotToMove(getX() - 1, getY()))
+			if (Game->isOpenSpot(getX() - 1, getY()))
 				setDirection(left);
 			else rightDir = false;
 			break;
 
 		case up:
-			if (Game->isValidSpotToMove(getX(), getY() + 1))
+			if (Game->isOpenSpot(getX(), getY() + 1))
 				setDirection(up);
 			else rightDir = false;
 			break;
 
 		case down:
-			if (Game->isValidSpotToMove(getX(), getY() - 1))
+			if (Game->isOpenSpot(getX(), getY() - 1))
 				setDirection(down);
 			else rightDir = false;
 			break;
@@ -331,7 +331,7 @@ void Protester::GoToExit(IceMan* player)
 		std::string exitPath;
 		bool found = false;
 
-		FindExitPath(maze, 60, 60, getX(), getY(), input, exitPath, found, player);
+		FindExitPath(board, 60, 60, getX(), getY(), input, exitPath, found, player);
 		setPathToExit(exitPath);
 	}
 	else
@@ -633,7 +633,7 @@ void Sonar::doSomething(IceMan* player)
 // --------------------------------------------------------- BOULDER --------------------------------------------------------- // 
 
 Boulder::Boulder(int startX, int startY) :
-	GameObject(IID_BOULDER, startX, startY, right, 1.0, 1)
+	Actor(IID_BOULDER, startX, startY, right, 1.0, 1)
 {
 	setVisible(true);
 	setTemporState(30);
@@ -643,7 +643,7 @@ void Boulder::doSomething(IceMan* player)
 {
 	StudentWorld* Game = player->getWorld();
 
-	if (!Game->isIceBelow(getX(), getY())) 	//	if there is no Ice below, set its state of falling to true
+	if (!Game->isIceBelow(getX(), getY())) 						//	if there is no Ice below, fall
 		fallingState = true;
 
 
@@ -665,23 +665,23 @@ void Boulder::doSomething(IceMan* player)
 			damagedProtester->setToLeaveOilFieldState();
 		}
 
-		if (Game->isWithinRange(getX(), getY(), player))// If it comes in contact with a player (protester or iceman himself
+		if (Game->isWithinRange(getX(), getY(), player))				// Collision with a player
 		{
-			player->setDead(); //kill the mandem
+			player->setDead();
 			setDead();
 		}
-		else if (Game->isWithinRange_sameObjs(getX(), getY(), Game->getBoulders().begin(), Game->getBoulders().end()))	// If it somehow collides with another boulder
+		else if (Game->isWithinRange_sameObjs(getX(), getY(), Game->getBoulders().begin(), Game->getBoulders().end()))		// Collision with another boulder	
 		{
 			setDead();
 		}
-		else if (Game->isWithinRange(getX(), getY()))	//If it hits Ice
+		else if (Game->isWithinRange(getX(), getY()))			//	Collision with Ice
 		{
 			setDead();
 		}
 
 		else
 		{
-			moveTo(getX(), getY() - 1); //Otherwise, move accordingly. 
+			moveTo(getX(), getY() - 1);
 		}
 
 	}
@@ -691,13 +691,13 @@ void Boulder::doSomething(IceMan* player)
 // --------------------------------------------------------- GAME OBJECT --------------------------------------------------------- // 
 
 
-GameObject::GameObject(int imageID, int startX, int startY, Direction dir, double size, unsigned int depth)
+Actor::Actor(int imageID, int startX, int startY, Direction dir, double size, unsigned int depth)
 	: GraphObject(imageID, startX, startY, dir, size, depth)
 {}
 
 
 
-void GameObject::decreTemporState()
+void Actor::decreTemporState()
 {
 	if (temporState == TIME_UP)
 		return;
@@ -709,7 +709,7 @@ void GameObject::decreTemporState()
 // --------------------------------------------------------- Ice MAN --------------------------------------------------------- // 
 
 
-IceMan::IceMan(StudentWorld* game_adr) : GameObject(IID_PLAYER, 30, 60, right, 1.0, 0)
+IceMan::IceMan(StudentWorld* game_adr) : Actor(IID_PLAYER, 30, 60, right, 1.0, 0)
 {
 	setVisible(true);
 	setWorld(game_adr);
@@ -779,7 +779,7 @@ void IceMan::init_Squirts()
 // --------------------------------------------------------- GOODIES --------------------------------------------------------- // 
 
 Goodies::Goodies(int imageID, int startX, int startY, Direction dir,
-	double size, unsigned int depth) : GameObject(imageID, startX, startY, dir, size, depth) {}
+	double size, unsigned int depth) : Actor(imageID, startX, startY, dir, size, depth) {}
 
 void Goodies::setOwnership(Actors actor)
 {
@@ -822,7 +822,7 @@ void Water::doSomething(IceMan* player)
 // --------------------------------------------------------- SQUIRT --------------------------------------------------------- // 
 
 Squirt::Squirt(int col, int row, Direction dir) :
-	GameObject(IID_WATER_SPURT, col, row, dir, 1.0, 1)
+	Actor(IID_WATER_SPURT, col, row, dir, 1.0, 1)
 {
 	setVisible(true);
 }
@@ -838,7 +838,7 @@ void Squirt::move(IceMan* player)
 	switch (dir)
 	{
 	case right:
-		if (Game->isValidSpotToMove(col + 1, row)) {
+		if (Game->isOpenSpot(col + 1, row)) {
 			moveTo(col + 1, row);
 			distanceTravelled++;
 		}
@@ -846,7 +846,7 @@ void Squirt::move(IceMan* player)
 		break;
 
 	case left:
-		if (Game->isValidSpotToMove(col - 1, row)) {
+		if (Game->isOpenSpot(col - 1, row)) {
 			moveTo(col - 1, row);
 			distanceTravelled++;
 		}
@@ -854,7 +854,7 @@ void Squirt::move(IceMan* player)
 		break;
 
 	case up:
-		if (Game->isValidSpotToMove(col, row + 1)) {
+		if (Game->isOpenSpot(col, row + 1)) {
 			moveTo(col, row + 1);
 			distanceTravelled++;
 		}
@@ -862,7 +862,7 @@ void Squirt::move(IceMan* player)
 		break;
 
 	case down:
-		if (Game->isValidSpotToMove(col, row - 1)) {
+		if (Game->isOpenSpot(col, row - 1)) {
 			moveTo(col, row - 1);
 			distanceTravelled++;
 		}
