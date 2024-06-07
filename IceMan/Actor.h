@@ -64,11 +64,11 @@ public:
 		double size, unsigned int depth);
 	virtual ~Goodies() {};
 
-	// GETTER FUNCTIONS //
+	// GETTER FUNCTIONS
 
 	Actors getOwnership() const { return whoPickedUp; };
 
-	// SETTER FUNCTIONS //
+	// SETTER FUNCTIONS
 
 	void setOwnership(Actors actor);
 	virtual void doSomething(IceMan* player) = 0;
