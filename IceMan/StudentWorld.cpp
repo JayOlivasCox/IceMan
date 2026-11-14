@@ -1,6 +1,9 @@
 #include "StudentWorld.h"
 #include <string>
 #include <algorithm>
+#include <cmath>
+#include <cstdlib>
+#include <stdexcept>
 
 GameWorld* createStudentWorld(std::string assetDir)
 {
@@ -672,6 +675,8 @@ void StudentWorld::dig_Ice()
 					playSound(SOUND_DIG);
 				}
 			}
+		break;
+	default:
 		break;
 	}
 }

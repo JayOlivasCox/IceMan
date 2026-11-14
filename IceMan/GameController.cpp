@@ -171,7 +171,9 @@ void GameController::run(int argc, char* argv[], GameWorld* gw, string windowTit
 	glutDisplayFunc(doSomethingCallback);
 	glutTimerFunc(MS_PER_FRAME, timerFuncCallback, 0);
 
+#ifndef __APPLE__	// freeglut-only; macOS uses Apple's built-in GLUT
 	glutSetOption(GLUT_ACTION_ON_WINDOW_CLOSE, GLUT_ACTION_GLUTMAINLOOP_RETURNS);
+#endif
 	glutMainLoop();
 	delete m_gw;
 }
@@ -321,7 +323,11 @@ void GameController::doSomething()
 			}
 			break;
 		case quit:
+#ifdef __APPLE__	// Apple's GLUT has no glutLeaveMainLoop
+			exit(0);
+#else
 			glutLeaveMainLoop();
+#endif
 			break;
 	}
 }

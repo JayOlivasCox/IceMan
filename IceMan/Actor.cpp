@@ -1,6 +1,8 @@
 #include "Actor.h"
 #include "StudentWorld.h"
 
+#include <algorithm>
+#include <cstdlib>
 #include <queue>
 #include <utility>
 
@@ -136,6 +138,8 @@ void Protester::checkPerpenPath(int col, int row, Direction currDir, IceMan* pla
 		if (flag) dir.push_back(right);
 
 	}
+	default:
+		break;
 	}
 
 }
@@ -260,6 +264,8 @@ void Protester::GoToCurrDirection(IceMan* player)
 			moveTo(getX() - 1, getY());
 		else setNumSquaresToMoveInCurrentDirection(0);
 		break;
+	default:
+		break;
 	}
 
 	decreNumSquaresToMoveInCurrentDirection();
@@ -306,6 +312,8 @@ void Protester::pickNewDirection(IceMan* player)
 			if (Game->isOpenSpot(getX(), getY() - 1))
 				setDirection(down);
 			else rightDir = false;
+			break;
+		default:
 			break;
 		}
 	} while (!rightDir);
@@ -773,6 +781,8 @@ void IceMan::init_Squirts()
 				m_squirts.push_back(new Squirt(getX(), getY() - 3, dir));
 			break;
 
+		default:
+			break;
 		}
 
 		getWorld()->playSound(SOUND_PLAYER_SQUIRT);
@@ -873,6 +883,8 @@ void Squirt::move(IceMan* player)
 			distanceTravelled++;
 		}
 		else setDead();
+		break;
+	default:
 		break;
 	}
 }
